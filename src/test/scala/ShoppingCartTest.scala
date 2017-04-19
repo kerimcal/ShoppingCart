@@ -29,4 +29,19 @@ class ShoppingCartTest extends FunSuite {
     val r = ShoppingCart.checkOut(Array())
     assert(r == 0)
   }
+
+  test("it should successfully checkout with apple offer") {
+    val r = ShoppingCart.checkOutWithOffer(Array("apple", "apple", "apple", "apple"))
+    assert(r == 1.2)
+  }
+
+  test("it should successfully checkout with orange offer") {
+    val r = ShoppingCart.checkOutWithOffer(Array("orange", "orange", "orange", "orange"))
+    assert(r == 0.75)
+  }
+
+  test("it should successfully checkout with mixed offer") {
+    val r = ShoppingCart.checkOutWithOffer(Array("orange", "orange", "orange", "apple", "apple"))
+    assert(r == 1.1)
+  }
 }

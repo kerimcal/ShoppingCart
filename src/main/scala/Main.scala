@@ -4,5 +4,6 @@
 object Main {
     def main(items: Array[String]): Unit = {
         println(s"Basket with [ ${items.mkString(", ")} ] => £${ShoppingCart.checkOut(items)}")
+        println(s"Basket with [ ${items.mkString(", ")} ] in an offer => £${ShoppingCart.checkOutWithOffer(items)}")
     }
 }

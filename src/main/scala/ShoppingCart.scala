@@ -12,4 +12,20 @@ object ShoppingCart {
   def checkOut(items: Array[String]): BigDecimal = {
     items.map(itemPrice(_)).sum
   }
+
+  def checkOutWithOffer(items: Array[String]): BigDecimal = {
+    items.groupBy(i => i).map(kv => offer(kv._1, kv._2.length)).sum
+  }
+
+  private def offer(itemName: String, itemCnt: Int): BigDecimal = {
+    itemName.toLowerCase match {
+      case "apple" => chargeableItemCountsInOfferTwoForOne(itemCnt) * itemPrice(itemName)
+      case "orange" => chargeableItemCountsInOfferThreeForTwo(itemCnt) * itemPrice(itemName)
+      case _ => itemCnt * itemPrice(itemName)
+    }
+  }
+
+  private def chargeableItemCountsInOfferTwoForOne(itemCnt: Int): Int = ((itemCnt / 2) + (itemCnt % 2))
+
+  private def chargeableItemCountsInOfferThreeForTwo(itemCnt: Int): Int = (2 * (itemCnt / 3) + (itemCnt % 3))
 }
