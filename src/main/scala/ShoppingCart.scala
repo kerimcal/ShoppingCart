@@ -19,13 +19,12 @@ object ShoppingCart {
 
   private def offer(itemName: String, itemCnt: Int): BigDecimal = {
     itemName.toLowerCase match {
-      case "apple" => chargeableItemCountsInOfferTwoForOne(itemCnt) * itemPrice(itemName)
-      case "orange" => chargeableItemCountsInOfferThreeForTwo(itemCnt) * itemPrice(itemName)
+      case "apple" => offerTwoForOne.checkOutItem(itemCnt, itemPrice(itemName))
+      case "orange" => offerThreeForTwo.checkOutItem(itemCnt, itemPrice(itemName))
       case _ => itemCnt * itemPrice(itemName)
     }
   }
 
-  private def chargeableItemCountsInOfferTwoForOne(itemCnt: Int): Int = ((itemCnt / 2) + (itemCnt % 2))
-
-  private def chargeableItemCountsInOfferThreeForTwo(itemCnt: Int): Int = (2 * (itemCnt / 3) + (itemCnt % 3))
+  val offerTwoForOne: Offer = new Offer with OfferTwoForOne
+  val offerThreeForTwo: Offer = new Offer with OfferThreeForTwo
 }
