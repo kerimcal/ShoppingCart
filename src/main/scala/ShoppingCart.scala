@@ -3,10 +3,13 @@
   */
 object ShoppingCart {
 
-  private val catalog: Map[String, Item] = Map("orange" -> Item("orange", 0.25), "apple" -> Item("apple", 0.60))
+  private val catalog: Map[String, Item] =
+    Map("orange" -> Item("orange", 0.25, chargeableItemCountsInOfferThreeForTwo),
+      "apple" -> Item("apple", 0.60, chargeableItemCountsInOfferTwoForOne)
+    )
 
   def itemPrice(itemName: String): BigDecimal = {
-    catalog.getOrElse(itemName.toLowerCase, Item("na", 0)).price
+    catalog.getOrElse(itemName.toLowerCase, Item("na", 0, defChargeableItemCounts)).price
   }
 
   def checkOut(items: Array[String]): BigDecimal = {
@@ -18,14 +21,16 @@ object ShoppingCart {
   }
 
   private def offer(itemName: String, itemCnt: Int): BigDecimal = {
-    itemName.toLowerCase match {
-      case "apple" => chargeableItemCountsInOfferTwoForOne(itemCnt) * itemPrice(itemName)
-      case "orange" => chargeableItemCountsInOfferThreeForTwo(itemCnt) * itemPrice(itemName)
-      case _ => itemCnt * itemPrice(itemName)
-    }
+    itemChargeableItemCountCalculator(itemName)(itemCnt) * itemPrice(itemName)
   }
 
-  private def chargeableItemCountsInOfferTwoForOne(itemCnt: Int): Int = ((itemCnt / 2) + (itemCnt % 2))
+  private def chargeableItemCountsInOfferTwoForOne(itemCnt: Int): Int = (itemCnt / 2) + (itemCnt % 2)
 
-  private def chargeableItemCountsInOfferThreeForTwo(itemCnt: Int): Int = (2 * (itemCnt / 3) + (itemCnt % 3))
+  private def chargeableItemCountsInOfferThreeForTwo(itemCnt: Int): Int = 2 * (itemCnt / 3) + (itemCnt % 3)
+
+  private def defChargeableItemCounts(itemCnt: Int): Int = itemCnt
+
+  def itemChargeableItemCountCalculator(itemName: String): Int => Int = {
+    catalog.getOrElse(itemName.toLowerCase, Item("na", 0, defChargeableItemCounts)).chargeableItemCountCalculator
+  }
 }
